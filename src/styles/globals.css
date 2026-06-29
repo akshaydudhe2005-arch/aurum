@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Google Fonts fallback for Canela / NHaasGrotesk — @import must precede all rules */
+=======
+/* @import MUST be first */
+>>>>>>> a215c77 (fix: move @import to top of globals.css to resolve PostCSS error)
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@300;400&display=swap');
 
 /* ============================================================
@@ -41,12 +45,12 @@
    ============================================================ */
 :root {
   /* --- Core Brand Colours --- */
-  --color-ink:        #0f0f0f;   /* Near-black. Used for all body text and dark sections. */
-  --color-parchment:  #faf8f5;   /* Warm off-white. Used as the main background. */
-  --color-cream:      #f2ede6;   /* Slightly darker warm white. Used for product card backgrounds. */
-  --color-gold:       #b8923a;   /* AURUM's single accent colour. Use sparingly — price tags, hover underlines, dividers. */
-  --color-mist:       #8a8680;   /* Muted warm grey. Used for secondary text, captions, legal text. */
-  --color-obsidian:   #1c1a18;   /* Dark section background (footer, dark hero overlay). Almost black but warm. */
+  --color-ink:        #0f0f0f;
+  --color-parchment:  #faf8f5;
+  --color-cream:      #f2ede6;
+  --color-gold:       #b8923a;
+  --color-mist:       #8a8680;
+  --color-obsidian:   #1c1a18;
 
   /* --- Semantic Aliases --- */
   --bg-primary:       var(--color-parchment);
@@ -59,15 +63,15 @@
   --border-default:   rgba(15, 15, 15, 0.12);
   --border-on-dark:   rgba(250, 248, 245, 0.15);
 
-/* ============================================================
-   3. TYPOGRAPHY
-   ============================================================ */
+  /* ============================================================
+     3. TYPOGRAPHY
+     ============================================================ */
   --font-display: 'Canela', 'Cormorant Garamond', 'Georgia', serif;
   --font-body: 'NHaasGrotesk', 'Inter', system-ui, sans-serif;
 
-/* ============================================================
-   4. TYPE SCALE
-   ============================================================ */
+  /* ============================================================
+     4. TYPE SCALE
+     ============================================================ */
   --text-hero:    clamp(64px, 11vw, 160px);
   --text-display: clamp(40px, 6vw, 96px);
   --text-heading: clamp(24px, 3vw, 40px);
@@ -75,16 +79,16 @@
   --text-small:   13px;
   --text-micro:   11px;
 
-/* ============================================================
-   5. LETTER SPACING
-   ============================================================ */
+  /* ============================================================
+     5. LETTER SPACING
+     ============================================================ */
   --tracking-display: -0.03em;
   --tracking-body:     0.01em;
   --tracking-caps:     0.15em;
 
-/* ============================================================
-   6. SPACING SYSTEM
-   ============================================================ */
+  /* ============================================================
+     6. SPACING SYSTEM
+     ============================================================ */
   --space-1:    8px;
   --space-2:    16px;
   --space-3:    24px;
@@ -96,9 +100,9 @@
   --space-section: clamp(80px, 12vw, 160px);
   --space-card: clamp(24px, 3vw, 48px);
 
-/* ============================================================
-   7. ANIMATION TOKENS
-   ============================================================ */
+  /* ============================================================
+     7. ANIMATION TOKENS
+     ============================================================ */
   --duration-fast:    200ms;
   --duration-base:    500ms;
   --duration-slow:    900ms;
@@ -107,18 +111,18 @@
   --ease-in-out:      cubic-bezier(0.76, 0,    0.24, 1);
   --ease-luxury:      cubic-bezier(0.16, 1,    0.3,  1);
 
-/* ============================================================
-   8. LAYOUT
-   ============================================================ */
-  --max-width:        1440px;
+  /* ============================================================
+     8. LAYOUT
+     ============================================================ */
+  --max-width:         1440px;
   --container-padding: clamp(24px, 5vw, 80px);
-  --grid-columns: 12;
-  --grid-gap: clamp(16px, 2vw, 32px);
+  --grid-columns:      12;
+  --grid-gap:          clamp(16px, 2vw, 32px);
   --product-grid-columns: repeat(auto-fill, minmax(280px, 1fr));
 
-/* ============================================================
-   9. Z-INDEX LAYERS
-   ============================================================ */
+  /* ============================================================
+     9. Z-INDEX LAYERS
+     ============================================================ */
   --z-base:     0;
   --z-raised:   10;
   --z-overlay:  50;
@@ -230,7 +234,7 @@ button {
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   transition: background-color var(--duration-base) var(--ease-in-out),
-              color          var(--duration-base) var(--ease-in-out);
+              color             var(--duration-base) var(--ease-in-out);
 }
 
 .btn-ghost:hover {
@@ -263,7 +267,7 @@ button {
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   transition: background-color var(--duration-base) var(--ease-luxury),
-              color          var(--duration-base) var(--ease-luxury);
+              color             var(--duration-base) var(--ease-luxury);
 }
 
 .btn-solid:hover {
