@@ -3,13 +3,11 @@ import { PRODUCTS } from '@/data/products'
 import type { Product } from '@/types'
 import ProductCard from './ProductCard'
 import styles from './ProductShowcase.module.css'
-import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 
 const FILTERS = ['All', 'Rings', 'Necklaces', 'Bracelets', 'Earrings']
 
 export default function ProductShowcase() {
   const [activeFilter, setActiveFilter] = useState('All')
-  const gridRef = useScrollAnimation()
 
   const filtered: Product[] =
     activeFilter === 'All'
@@ -17,7 +15,7 @@ export default function ProductShowcase() {
       : PRODUCTS.filter((p) => p.category === activeFilter)
 
   return (
-    <section className={`section container ${styles.showcaseSection}`}>
+    <section className={`section container ${styles.section}`}>
       <div className={styles.header}>
         <div>
           <h2 className={styles.title}>Our Pieces</h2>
@@ -37,10 +35,12 @@ export default function ProductShowcase() {
         </div>
       </div>
 
-      <div ref={gridRef as React.RefObject<HTMLDivElement>} className={styles.grid}>
-        {filtered.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+      <div className={styles.scrollWrapper}>
+        <div className={styles.grid}>
+          {filtered.map((product, index) => (
+            <ProductCard key={product.id} product={product} index={index} />
+          ))}
+        </div>
       </div>
     </section>
   )
