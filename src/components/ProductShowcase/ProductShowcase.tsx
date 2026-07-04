@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { PRODUCTS } from '@/data/products'
 import type { Product } from '@/types'
-import ProductCard from './ProductCard'
+import ProductCard from './SlideProductCard'
 import styles from './ProductShowcase.module.css'
 
 const FILTERS = ['All', 'Rings', 'Necklaces', 'Bracelets', 'Earrings']
@@ -9,22 +9,12 @@ const FILTERS = ['All', 'Rings', 'Necklaces', 'Bracelets', 'Earrings']
 const LERP_EASE = 0.038
 const DRAG_SPEED = 0.75
 const FRICTION = 0.978
-const MAX_VELOCITY = 35 // px/frame cap so a hard flick can't launch it too fast
-const VELOCITY_SAMPLE_WINDOW = 120 // ms
+const MAX_VELOCITY = 35
+const VELOCITY_SAMPLE_WINDOW = 120
 
-// ── Wheel/coverflow feel ──
-// As a card's center moves away from the wrapper's center, it curves
-// upward on an arc and spins slightly in 3D — like it's riding the
-// rim of a wheel that's turning as you drag. No scale or opacity
-// change: every card stays full-size and fully opaque, so nothing
-// "pops" or fades in/out as it reaches center.
-const MAX_ROTATE_Y = 34 // deg — bigger = stronger 3D spin, more depth
-const ARC_HEIGHT = 75 // px — bigger = more pronounced wheel-rim arc
+const MAX_ROTATE_Y = 62
+const ARC_HEIGHT = 0 
 
-// How many cards get cloned onto each end of the row, so that on
-// first load — before the user has dragged at all — there are
-// already real product images peeking in on the left of the
-// center card, not empty space. Dragging left reveals them fully.
 const EDGE_CLONE_COUNT = 3
 
 export default function ProductShowcase() {
@@ -52,9 +42,7 @@ export default function ProductShowcase() {
       ? PRODUCTS
       : PRODUCTS.filter((p) => p.category === activeFilter)
 
-  // Pad the row with clones of the tail/head so the very first paint
-  // already has real cards sitting to the left (and right) of the
-  // visual center, instead of the row starting flush at its own edge.
+  
   const displayItems: (Product & { _slotKey: string })[] =
     filtered.length > EDGE_CLONE_COUNT
       ? [
@@ -76,9 +64,7 @@ export default function ProductShowcase() {
     )
   }, [])
 
-  // Applies the wheel-curve transform to every card based on where its
-  // center currently sits relative to the wrapper's center. Written
-  // directly to the DOM (not React state) so it can run every frame.
+  
   const applyWheelTransforms = useCallback(() => {
     const wrapper = wrapperRef.current
     if (!wrapper) return
@@ -95,7 +81,7 @@ export default function ProductShowcase() {
       const ratio = Math.max(-1.6, Math.min(1.6, offset / centerX))
       const absRatio = Math.min(Math.abs(ratio), 1)
 
-      const rotateY = ratio * MAX_ROTATE_Y
+      const rotateY = -ratio * MAX_ROTATE_Y
       const arcY = absRatio * ARC_HEIGHT
 
       el.style.transform = `translateY(${arcY}px) rotateY(${rotateY}deg)`
@@ -141,10 +127,7 @@ export default function ProductShowcase() {
     }
   }, [tick])
 
-  // After (re)measuring, scroll so the first *real* card sits near
-  // the left with only a slice of the cloned "peek" card showing
-  // before it — this is what makes the row open with images on both
-  // sides of center instead of starting flush against empty space.
+  
   const scrollToOpeningPosition = useCallback(() => {
     const realStartIndex = filtered.length > EDGE_CLONE_COUNT ? EDGE_CLONE_COUNT : 0
     const meta = cardMeta.current[realStartIndex]
