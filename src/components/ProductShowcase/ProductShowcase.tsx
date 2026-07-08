@@ -9,9 +9,6 @@ const FILTERS = ['All', 'Rings', 'Necklaces', 'Bracelets', 'Earrings']
 
 const LERP_EASE = 0.038
 const FRICTION = 0.978
-
-// Page ko vertically kitna scroll kiya, uska kitna % horizontal
-// movement mein convert karna hai (sirf jab section locked/visible ho).
 const SCROLL_TO_HORIZONTAL = 1.2
 
 const MAX_ROTATE_Y = 62
@@ -19,11 +16,6 @@ const ARC_HEIGHT = 0
 
 const EDGE_CLONE_COUNT = 3
 
-// Agar filtered catalog itna chota hai ki clones sirf wahi 3 items
-// dobara dikhayenge (jo already screen par hain), toh carousel/scroll-lock
-// completely disable karke ek simple static grid dikhate hain — warna
-// scroll karne par "kuch move hi nahi ho raha" jaisa lagta hai, jabke
-// asal mein sirf wahi teen cards baar baar repeat ho rahe hote hain.
 const MIN_ITEMS_FOR_LOOP = EDGE_CLONE_COUNT * 2
 
 export default function ProductShowcase() {
@@ -47,7 +39,6 @@ export default function ProductShowcase() {
       ? PRODUCTS
       : PRODUCTS.filter((p) => p.category === activeFilter)
 
-  // TEMP DEBUG — remove once confirmed working
   console.log('[catalog-debug]', { totalProducts: PRODUCTS.length, filteredCount: filtered.length, activeFilter })
 
   const enableCarousel = filtered.length >= MIN_ITEMS_FOR_LOOP
@@ -172,11 +163,6 @@ export default function ProductShowcase() {
       if (rafId.current !== null) cancelAnimationFrame(rafId.current)
     }
   }, [measure, applyWheelTransforms, applyGridTransform, scrollToOpeningPosition])
-
-  // Real scroll-lock: jab section top se dock hoti hai, page freeze ho
-  // jaata hai aur wheel/touch delta seedha yahan (onDelta) aata hai —
-  // bilkul wahi logic jo pehle handlePageScroll mein tha. Jab progress
-  // 0 ya maxScroll tak pahunch jaata hai, hook khud unlock kar deta hai.
   const onDelta = useCallback((dy: number) => {
     velocity.current = 0
     target.current = clamp(target.current + dy * SCROLL_TO_HORIZONTAL)
