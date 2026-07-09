@@ -1,5 +1,6 @@
 .section {
-  padding: 16px 0 24px;
+  padding-block: clamp(48px, 8vw, 88px);
+  margin: 0;
 }
 
 .header {
@@ -63,10 +64,20 @@
 }
 
 .scrollWrapper {
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
   padding: 40px 0 60px;
   perspective: 1000px;
+}
+
+.scrollWrapper::-webkit-scrollbar {
+  display: none;
 }
 
 .grid {
@@ -75,21 +86,14 @@
   gap: clamp(70px, 7vw, 150px);
   padding: 0 20vw;
   width: max-content;
-  will-change: transform;
   transform-style: preserve-3d;
-}
-.gridStatic {
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 100%;
-  padding: 0 var(--container-padding, 24px);
-  will-change: auto;
 }
 
 .wheelCardSlot {
   flex: 0 0 auto;
+  scroll-snap-align: center;
   transform-style: preserve-3d;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
 .productCard {

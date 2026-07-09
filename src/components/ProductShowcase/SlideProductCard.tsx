@@ -5,8 +5,6 @@ import styles from './ProductShowcase.module.css'
 const WIDTH_VARIANTS = [300, 360, 270, 340, 310, 350]
 const ASPECT_VARIANTS = ['3 / 4.6', '4 / 5.8', '1 / 1.4', '3 / 5', '1 / 1.3', '4 / 6']
 
-const BIGGEST_WIDTH = Math.max(...WIDTH_VARIANTS)
-
 export default function DragProductCard({
   product,
   index = 0,

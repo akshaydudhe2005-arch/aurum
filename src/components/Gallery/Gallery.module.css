@@ -7,38 +7,45 @@
 .gallerySection {
   position: relative;
   width: 100%;
-  height: 300svh; /* scroll distance = 200svh → one-and-a-half orbits */
+  height: 100svh;
+  margin: 0;
+  padding: 0;
   background-color: var(--bg-primary);
+  overflow: hidden;
 }
 
 .domeSticky {
   position: sticky;
   top: 0;
   height: 100svh;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-/* Radial clock-menu docked to the bottom of the dome section only. It rides
-   the sticky wrapper, so it's visible while the dome is pinned and scrolls
-   away with it — never over the hero or footer. */
 .clockDock {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
+  position: relative;
+  flex: 0 0 auto;
+  z-index: 10;
   display: flex;
   justify-content: center;
+  padding: 0 0 max(10px, env(safe-area-inset-bottom));
+  background: linear-gradient(
+    to top,
+    var(--bg-primary) 55%,
+    color-mix(in srgb, var(--bg-primary) 88%, transparent) 78%,
+    transparent
+  );
   pointer-events: none;
 }
 
 .dome {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
-  height: 100%;
   cursor: grab;
-  touch-action: pan-y; /* let vertical touch-scroll drive the rotation */
+  touch-action: pan-y;
   animation: fade-in 0.8s ease both;
 }
 
