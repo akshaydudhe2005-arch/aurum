@@ -12,10 +12,10 @@ import { useLenis } from './hooks/useLenis'
 // Single-page AURUM layout, top to bottom:
 //   Intro              → splash/counter intro, plays on every load, then
 //                         reveals everything below via a circular wipe
-//   Nav + Hero         → the fixed nav over the full-screen hero
+//   Nav + Hero         → the fixed nav over the full-screen video hero
 //   DomeGallery        → the WebGL photo dome (centrepiece, drag to explore)
-//   ProductShowcase    → scrollable product showcase section
 //   ExploreByOccasion  → occasion-based category cards
+//   ProductShowcase    → scrollable "Our Pieces" product showcase section
 //   Footer             → closing footer
 //   CartDrawer         → slide-in bag drawer, fixed, sits above everything
 function App() {
@@ -27,8 +27,8 @@ function App() {
       <Nav />
       <Hero />
       <DomeGallery />
-      <ProductShowcase />
       <ExploreByOccasion />
+      <ProductShowcase />
       <Footer />
       <CartDrawer />
     </CartProvider>

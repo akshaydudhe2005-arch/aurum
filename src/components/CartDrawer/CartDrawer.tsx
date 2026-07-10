@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 import gsap from "gsap";
 import { useCart } from "./CartContext";
 import "./CartDrawer.css";
@@ -78,25 +78,10 @@ export default function CartDrawer() {
         <div className="cart-drawer__items">
           {items.length === 0 ? (
             <div className="cart-drawer__empty">
-              <svg
+              <ShoppingCart
                 className="cart-drawer__empty-icon"
-                viewBox="0 0 64 64"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M32 6c-9 0-14 7-14 14 0 10 8 14 8 22a6 6 0 0 0 12 0c0-8 8-12 8-22 0-7-5-14-14-14Z"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                />
-                <circle cx="32" cy="46" r="4" stroke="currentColor" strokeWidth="1.2" />
-                <path
-                  d="M14 20c-4 3-6 7-6 7s6 2 10-1M50 20c4 3 6 7 6 7s-6 2-10-1"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-              </svg>
+                strokeWidth={1.2}
+              />
               <p>Your cart is currently empty.</p>
               <button className="cart-drawer__empty-cta" onClick={scrollToShowcase}>
                 Explore Collection

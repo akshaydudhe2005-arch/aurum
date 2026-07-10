@@ -135,8 +135,8 @@
 .cart-drawer__empty-icon {
   width: 48px;
   height: 48px;
-  color: var(--aurum-gold);
-  opacity: 0.85;
+  color: var(--aurum-ivory);
+  opacity: 0.9;
 }
 
 .cart-drawer__empty p {
@@ -333,9 +333,10 @@
 }
 
 .cart-drawer__checkout-full:disabled {
-  background: var(--aurum-bg-alt);
-  color: var(--aurum-ivory-dim);
+  background: var(--aurum-ivory);
+  color: var(--aurum-bg);
   cursor: not-allowed;
+  opacity: 1;
 }
 
 @media (max-width: 480px) {
