@@ -166,6 +166,7 @@ export default function ProductShowcase() {
   const onDelta = useCallback((dy: number) => {
     velocity.current = 0
     target.current = clamp(target.current + dy * SCROLL_TO_HORIZONTAL)
+    console.log('[carousel-debug]', { dy, target: target.current, current: current.current, maxScroll: maxScroll.current })
     ensureLoop()
   }, [ensureLoop])
 
@@ -174,7 +175,30 @@ export default function ProductShowcase() {
     max: maxScroll.current,
   }), [])
 
-  useSectionScrollLock({ sectionRef, onDelta, getProgress, enabled: enableCarousel })
+
+  
+  const getContentRect = useCallback(() => {
+    const els = cardRefs.current.filter((el): el is HTMLDivElement => el !== null)
+    if (els.length === 0) return null
+
+    let top = Infinity
+    let bottom = -Infinity
+    for (const el of els) {
+      const r = el.getBoundingClientRect()
+      if (r.top < top) top = r.top
+      if (r.bottom > bottom) bottom = r.bottom
+    }
+    if (!isFinite(top) || !isFinite(bottom)) return null
+    return { top, height: bottom - top }
+  }, [])
+
+  useSectionScrollLock({
+    sectionRef,
+    onDelta,
+    getProgress,
+    enabled: enableCarousel,
+    getContentRect,
+  })
 
   const handleFilter = (filter: string) => {
     setActiveFilter(filter)
