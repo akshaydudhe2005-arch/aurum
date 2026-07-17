@@ -21,6 +21,10 @@ export function useLenis(enabled = true) {
 
     gsap.ticker.lagSmoothing(0)
 
+    // the site was mounted under the intro overlay — recalculate all
+    // trigger positions now that scrolling is unlocked
+    ScrollTrigger.refresh()
+
     return () => {
       delete w.lenis
       lenis.destroy()

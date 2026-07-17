@@ -15,35 +15,37 @@ import { CartProvider } from './components/CartDrawer/CartContext'
 import { CategoryProvider } from './context/CategoryContext'
 import { useLenis } from './hooks/useLenis'
 
-type BootPhase = 'typography' | 'preloader' | 'ready'
+type BootPhase = 'preloader' | 'unveiling' | 'ready'
 
 function App() {
-  // boot goes straight to the editorial preloader (Vero-style reference)
+  // preloader → unveiling (hero animates in UNDER the intro while it
+  // fades away) → ready. The site is always mounted so there is no
+  // hard cut or video restart when the intro leaves.
   const [bootPhase, setBootPhase] = useState<BootPhase>('preloader')
   useLenis(bootPhase === 'ready')
 
   return (
     <CartProvider>
-      {bootPhase === 'preloader' && (
-        <Intro onComplete={() => setBootPhase('ready')} />
+      {bootPhase !== 'ready' && (
+        <Intro
+          onReveal={() => setBootPhase('unveiling')}
+          onComplete={() => setBootPhase('ready')}
+        />
       )}
-      
-      {/* Strictly mount main site components ONLY when bootPhase is 'ready' */}
-      {bootPhase === 'ready' && (
-        <CategoryProvider>
-          <Nav />
-          <Hero ready={bootPhase === 'ready'} />
-          <Story />
-          <Craft />
-          <DomeGallery />
-          <ExploreByOccasion />
-          <ProductShowcase />
-          <ClosingCTA />
-          <Footer />
-          <CartDrawer />
-          <FilmGrain />
-        </CategoryProvider>
-      )}
+
+      <CategoryProvider>
+        <Nav />
+        <Hero ready={bootPhase !== 'preloader'} />
+        <Story />
+        <Craft />
+        <DomeGallery />
+        <ExploreByOccasion />
+        <ProductShowcase />
+        <ClosingCTA />
+        <Footer />
+        <CartDrawer />
+        <FilmGrain />
+      </CategoryProvider>
     </CartProvider>
   )
 }

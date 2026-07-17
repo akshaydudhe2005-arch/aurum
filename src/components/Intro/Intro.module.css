@@ -5,6 +5,19 @@
   overflow: hidden;
 }
 
+/* Once the reveal video is fullscreen, the whole intro dissolves,
+   unveiling the hero already animating underneath */
+.introFade {
+  animation: introFade 1s var(--ease-luxury) 1.5s both;
+  pointer-events: none;
+}
+
+@keyframes introFade {
+  to {
+    opacity: 0;
+  }
+}
+
 /* Parchment canvas — the editorial page the type sits on */
 .bg {
   position: absolute;

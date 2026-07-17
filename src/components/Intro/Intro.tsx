@@ -9,7 +9,7 @@ import styles from './Intro.module.css'
  */
 
 const LOADING_DURATION_MS = 9000
-const REVEAL_DURATION_MS = 2200
+const REVEAL_DURATION_MS = 2600
 
 function progressCurve(t: number): number {
   const clamped = Math.min(Math.max(t, 0), 1)
@@ -21,7 +21,13 @@ function progressCurve(t: number): number {
 
 type Phase = 'loading' | 'revealing' | 'done'
 
-export default function Intro({ onComplete }: { onComplete: () => void }) {
+export default function Intro({
+  onComplete,
+  onReveal,
+}: {
+  onComplete: () => void
+  onReveal?: () => void
+}) {
   const [phase, setPhase] = useState<Phase>('loading')
   const [count, setCount] = useState(0)
   const startRef = useRef<number | null>(null)
@@ -31,7 +37,10 @@ export default function Intro({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     phaseRef.current = phase
-  }, [phase])
+    // tell the app the reveal has begun so the hero can start
+    // its entrance underneath the intro
+    if (phase === 'revealing') onReveal?.()
+  }, [phase, onReveal])
 
   useEffect(() => {
     document.documentElement.style.overflow = 'hidden'
@@ -108,7 +117,10 @@ export default function Intro({ onComplete }: { onComplete: () => void }) {
   const insetX = 47 - (count / 100) * 4 // 47% → 43%
 
   return (
-    <div className={styles.intro} role="presentation">
+    <div
+      className={`${styles.intro} ${revealing ? styles.introFade : ''}`}
+      role="presentation"
+    >
       <div className={styles.bg} />
 
       {/* Fullscreen video, clipped to a small centered window that
