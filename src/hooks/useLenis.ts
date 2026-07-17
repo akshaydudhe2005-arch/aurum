@@ -9,7 +9,9 @@ export function useLenis(enabled = true) {
   useEffect(() => {
     if (!enabled) return
     const lenis = new Lenis()
-    window.lenis = lenis
+    // lenis ships its own (incompatible) window.lenis type, so cast around it
+    const w = window as unknown as { lenis?: Lenis }
+    w.lenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
 
@@ -20,7 +22,7 @@ export function useLenis(enabled = true) {
     gsap.ticker.lagSmoothing(0)
 
     return () => {
-      delete window.lenis
+      delete w.lenis
       lenis.destroy()
     }
   }, [enabled])

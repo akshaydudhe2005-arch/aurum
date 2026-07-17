@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import Nav from './components/Nav/Nav'
 import Hero from './components/Hero/Hero'
+import Story from './components/Story/Story'
+import Craft from './components/Craft/Craft'
+import ClosingCTA from './components/ClosingCTA/ClosingCTA'
+import FilmGrain from './components/Ambient/FilmGrain'
 import DomeGallery from './components/Gallery/DomeGallery'
 import ExploreByOccasion from './components/ExploreByOccasion/ExploreByOccasion'
 import ProductShowcase from './components/ProductShowcase/ProductShowcase'
 import Footer from './components/Footer/Footer'
-import IntroOverlay from './components/Intro/IntroOverlay'
 import Intro from './components/Intro/Intro'
 import CartDrawer from './components/CartDrawer/CartDrawer'
 import { CartProvider } from './components/CartDrawer/CartContext'
@@ -15,14 +18,12 @@ import { useLenis } from './hooks/useLenis'
 type BootPhase = 'typography' | 'preloader' | 'ready'
 
 function App() {
-  const [bootPhase, setBootPhase] = useState<BootPhase>('typography')
+  // boot goes straight to the editorial preloader (Vero-style reference)
+  const [bootPhase, setBootPhase] = useState<BootPhase>('preloader')
   useLenis(bootPhase === 'ready')
 
   return (
     <CartProvider>
-      {bootPhase === 'typography' && (
-        <IntroOverlay onComplete={() => setBootPhase('preloader')} />
-      )}
       {bootPhase === 'preloader' && (
         <Intro onComplete={() => setBootPhase('ready')} />
       )}
@@ -32,11 +33,15 @@ function App() {
         <CategoryProvider>
           <Nav />
           <Hero ready={bootPhase === 'ready'} />
+          <Story />
+          <Craft />
           <DomeGallery />
           <ExploreByOccasion />
           <ProductShowcase />
+          <ClosingCTA />
           <Footer />
           <CartDrawer />
+          <FilmGrain />
         </CategoryProvider>
       )}
     </CartProvider>
