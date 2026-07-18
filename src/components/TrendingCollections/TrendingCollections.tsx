@@ -126,7 +126,7 @@ function TrendingCollections({ pieces = DEFAULT_PIECES }: TrendingCollectionsPro
             </section>
           ))}
 
-          <div className={styles.endNote}>That&apos;s everything trending this week.</div>
+          <div className={styles.endNote}></div>
         </div>
       </div>
     </section>
