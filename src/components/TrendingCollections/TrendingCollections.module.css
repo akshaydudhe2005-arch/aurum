@@ -1,0 +1,254 @@
+/* TrendingCollections uses its own local palette (cream/ink/gold), scoped to
+   .wrapper so it can't leak into or clash with the rest of the app's tokens. */
+.wrapper {
+  --tc-cream: #F8F3E8;
+  --tc-ink: #1E1B14;
+  --tc-ink-soft: #63594A;
+  --tc-gold: #B08A45;
+  --tc-gold-bright: #D3AC6C;
+  --tc-line: rgba(30, 27, 20, 0.1);
+  --tc-stage: #17130F;
+
+  background: var(--tc-cream);
+  color: var(--tc-ink);
+  font-family: 'Spectral', serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+.wrapper ::selection {
+  background: var(--tc-gold-bright);
+  color: #1E1B14;
+}
+
+/* ---------- Masthead ---------- */
+.masthead {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 48px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(23,19,15,0.72) 0%, rgba(23,19,15,0.32) 60%, rgba(23,19,15,0) 100%);
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.masthead * {
+  pointer-events: auto;
+}
+.wordmark {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 42px;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+.tagline {
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #000;
+}
+
+/* ---------- Layout ---------- */
+.scene {
+  display: flex;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .scene {
+    flex-direction: column;
+  }
+}
+
+/* ---------- Left: sticky image panel ---------- */
+.imagePanel {
+  width: 52%;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: var(--tc-stage);
+  overflow: hidden;
+}
+@media (max-width: 900px) {
+  .imagePanel {
+    display: none;
+  }
+}
+.imageStack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.stackImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 1s cubic-bezier(.2,.7,.3,1), transform 1.1s cubic-bezier(.2,.7,.3,1);
+}
+.stackImg.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.imagePanel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 32%, rgba(0,0,0,0) 68%, rgba(0,0,0,0.25) 100%);
+  pointer-events: none;
+}
+
+.dots {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 2;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background .3s ease, transform .3s ease;
+}
+.dot.active {
+  background: #fff;
+  transform: scale(1.3);
+}
+
+/* ---------- Right: story sections ---------- */
+.storyPanel {
+  width: 48%;
+}
+@media (max-width: 900px) {
+  .storyPanel {
+    width: 100%;
+  }
+}
+
+.storySection {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 56px;
+  position: relative;
+  border-bottom: 1px solid var(--tc-line);
+}
+@media (max-width: 900px) {
+  .storySection {
+    padding: 90px 26px;
+    min-height: auto;
+  }
+}
+
+.mobileImg {
+  display: none;
+  width: 100%;
+  aspect-ratio: 4/5;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  background: linear-gradient(155deg, #E4D6B0 0%, #C9A669 55%, #B08A4C 100%);
+}
+.mobileImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@media (max-width: 900px) {
+  .mobileImg {
+    display: block;
+  }
+}
+
+.storyCat {
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--tc-gold);
+  position: relative;
+  z-index: 1;
+}
+.storyName {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(42px, 5.4vw, 66px);
+  line-height: 1.06;
+  margin: 16px 0 22px;
+  max-width: 11ch;
+  position: relative;
+  z-index: 1;
+}
+.storyDesc {
+  font-family: 'Spectral', serif;
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--tc-ink-soft);
+  max-width: 42ch;
+  position: relative;
+  z-index: 1;
+}
+.storyBottom {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-top: 30px;
+  position: relative;
+  z-index: 1;
+}
+.storyPrice {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+}
+.storyCta {
+  font-family: 'Jost', sans-serif;
+  font-size: 11.5px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--tc-ink);
+  background: none;
+  border: 1px solid var(--tc-ink);
+  padding: 13px 26px;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease;
+}
+.storyCta:hover {
+  background: var(--tc-ink);
+  color: #fff;
+}
+
+.endNote {
+  padding: 90px 56px 140px;
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--tc-ink-soft);
+}
+@media (max-width: 900px) {
+  .endNote {
+    padding: 60px 26px 100px;
+  }
+}
