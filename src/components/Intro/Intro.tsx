@@ -1,29 +1,46 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './Intro.module.css'
 
-// ── Timing ──
-const LOADING_DURATION_MS = 14000
-const REVEAL_DURATION_MS = 2000
+/**
+ * Intro — editorial preloader.
+ * Parchment canvas, mixed roman/italic serif typography with a small
+ * media swatch inline between the words. The swatch grows as loading
+ * progresses; at 100% the frame expands to fullscreen, revealing the hero.
+ */
 
-// Slow climb to ~20%, a long hold, then a fast rush to 100 — matches the
-// ilCapo reference recording (20% held from ~70%–90% of the load time,
-// then a sprint to 100 right at the end).
+const LOADING_DURATION_MS = 2000
+const REVEAL_DURATION_MS = 1800
+
 function progressCurve(t: number): number {
   const clamped = Math.min(Math.max(t, 0), 1)
   if (clamped < 0.15) return (clamped / 0.15) * 20
-  if (clamped < 0.82) return 20 + ((clamped - 0.15) / (0.82 - 0.15)) * 8
+  if (clamped < 0.82) return 20 + ((clamped - 0.15) / (0.82 - 0.15)) * 38
   const rushT = (clamped - 0.82) / (1 - 0.82)
-  return 28 + rushT * rushT * 72
+  return 58 + rushT * rushT * 42
 }
 
 type Phase = 'loading' | 'revealing' | 'done'
 
-export default function Intro() {
+export default function Intro({
+  onComplete,
+  onReveal,
+}: {
+  onComplete: () => void
+  onReveal?: () => void
+}) {
   const [phase, setPhase] = useState<Phase>('loading')
   const [count, setCount] = useState(0)
   const startRef = useRef<number | null>(null)
   const rafRef = useRef<number | null>(null)
   const skippedRef = useRef(false)
+  const phaseRef = useRef<Phase>('loading')
+
+  useEffect(() => {
+    phaseRef.current = phase
+    // tell the app the reveal has begun so the hero can start
+    // its entrance underneath the intro
+    if (phase === 'revealing') onReveal?.()
+  }, [phase, onReveal])
 
   useEffect(() => {
     document.documentElement.style.overflow = 'hidden'
@@ -47,41 +64,64 @@ export default function Intro() {
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
+    // ignore stray trackpad/wheel momentum right after mount so the
+    // intro text is always seen before a scroll can skip it
+    const armedAt = performance.now() + 800
+    const onWheel = () => {
+      if (performance.now() < armedAt) return
+      if (phaseRef.current === 'loading') {
+        skippedRef.current = true
+        setCount(100)
+        setPhase('revealing')
+      } else if (phaseRef.current === 'revealing') {
+        document.documentElement.style.overflow = ''
+        setPhase('done')
+        onComplete()
+      }
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [onComplete])
+
+  useEffect(() => {
     if (phase !== 'revealing') return
-    // Reveal is pure CSS (clip-path transition, see Intro.module.css) —
-    // just wait it out, then unmount and hand off to the real Hero
-    // underneath (same video, so the handoff is seamless).
     const timer = setTimeout(() => {
       document.documentElement.style.overflow = ''
       setPhase('done')
+      onComplete()
     }, REVEAL_DURATION_MS)
     return () => clearTimeout(timer)
-  }, [phase])
+  }, [phase, onComplete])
 
-  const handleSkip = () => {
+  const handleSkip = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (phase === 'loading') {
       skippedRef.current = true
+      setCount(100)
+      setPhase('revealing')
     } else if (phase === 'revealing') {
       document.documentElement.style.overflow = ''
       setPhase('done')
+      onComplete()
     }
   }
 
   if (phase === 'done') return null
 
   const revealing = phase === 'revealing'
+  const insetY = 44 - (count / 100) * 5
+  const insetX = 47 - (count / 100) * 4
 
   return (
-    <div className={styles.intro} onClick={handleSkip} role="button" aria-label="Skip intro">
+    <div
+      className={`${styles.intro} ${revealing ? styles.introFade : ''}`}
+      role="presentation"
+    >
       <div className={styles.bg} />
 
-      {/* Same source as the real Hero — clip-path grows this from a small
-          centered box to fullscreen, so the handoff to the real Hero
-          underneath is seamless once this unmounts. */}
       <video
         className={`${styles.revealVideo} ${revealing ? styles.revealVideoOpen : ''}`}
         src="/videos/hero-loop.mp4"
@@ -89,36 +129,33 @@ export default function Intro() {
         loop
         muted
         playsInline
+        style={revealing ? undefined : { clipPath: `inset(${insetY}% ${insetX}%)` }}
       />
 
-      <div className={`${styles.previewBadge} ${revealing ? styles.previewBadgeHide : ''}`}>
-        Scroll
+      <div className={styles.content}>
+        <p className={`${styles.line} ${styles.lineTop} ${revealing ? styles.lineExitUp : ''}`}>
+          WHERE <em>your</em> GOLD
+        </p>
+
+        <div className={styles.swatchGap} />
+
+        <p className={`${styles.line} ${styles.lineBottom} ${revealing ? styles.lineExitDown : ''}`}>
+          BECOMES <em>art.</em>
+        </p>
       </div>
 
-      <div className={`${styles.content} ${revealing ? styles.contentSettle : ''}`}>
-        <svg className={styles.mark} viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <circle cx="32" cy="32" r="30" stroke="var(--color-gold)" strokeWidth="1" />
-          <text
-            x="32"
-            y="42"
-            textAnchor="middle"
-            fontFamily="var(--font-display)"
-            fontSize="28"
-            fill="var(--color-gold)"
-          >
-            A
-          </text>
-        </svg>
-
-        <h1 className={styles.wordmark}>AURUM</h1>
-        <p className={`${styles.subtitle} ${revealing ? styles.hide : ''}`}>Fine Jewellery</p>
-
-        <div className={`${styles.rule} ${revealing ? styles.hide : ''}`} />
-
-        <p className={`${styles.counter} ${revealing ? styles.hide : ''}`}>{count}</p>
+      <div className={`${styles.progress} ${revealing ? styles.hide : ''}`}>
+        <span className={styles.counter}>{count}%</span>
+        <div className={styles.track}>
+          <div className={styles.fill} style={{ transform: `scaleX(${count / 100})` }} />
+        </div>
       </div>
 
-      <button className={`${styles.skip} ${revealing ? styles.hide : ''}`} onClick={handleSkip} type="button">
+      <button
+        className={`${styles.skip} ${revealing ? styles.hide : ''}`}
+        onClick={handleSkip}
+        type="button"
+      >
         Skip
       </button>
     </div>

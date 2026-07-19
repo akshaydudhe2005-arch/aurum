@@ -5,14 +5,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export function useLenis() {
+export function useLenis(enabled = true) {
   useEffect(() => {
-    // 1. Initialize the smooth scroll instance
+    if (!enabled) return
     const lenis = new Lenis()
-
-    // 2. IMPORTANT FIX: Bind the instance to the global window object.
-    // This allows useSectionScrollLock.ts to access lenis.stop() and lenis.start()
-    window.lenis = lenis
+    // lenis ships its own (incompatible) window.lenis type, so cast around it
+    const w = window as unknown as { lenis?: Lenis }
+    w.lenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
 
@@ -22,10 +21,13 @@ export function useLenis() {
 
     gsap.ticker.lagSmoothing(0)
 
+    // the site was mounted under the intro overlay — recalculate all
+    // trigger positions now that scrolling is unlocked
+    ScrollTrigger.refresh()
+
     return () => {
-      // 3. Clean up the instance and the global reference on unmount
+      delete w.lenis
       lenis.destroy()
-      window.lenis = undefined
     }
-  }, [])
+  }, [enabled])
 }
