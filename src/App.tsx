@@ -7,19 +7,18 @@ import ClosingCTA from './components/ClosingCTA/ClosingCTA'
 import FilmGrain from './components/Ambient/FilmGrain'
 import DomeGallery from './components/Gallery/DomeGallery'
 import ExploreByOccasion from './components/ExploreByOccasion/ExploreByOccasion'
+import TrendingCollections from './components/TrendingCollections/TrendingCollections'
 import ProductShowcase from './components/ProductShowcase/ProductShowcase'
 import Shop from './components/Shop/Shop'
 import Footer from './components/Footer/Footer'
 import Intro from './components/Intro/Intro'
+import IntroOverlay from './components/Intro/IntroOverlay'
 import CartDrawer from './components/CartDrawer/CartDrawer'
 import { CartProvider } from './components/CartDrawer/CartContext'
 import { CategoryProvider } from './context/CategoryContext'
 import { useLenis } from './hooks/useLenis'
 
-// Make sure to import IntroOverlay if it's not already in your file
-// import IntroOverlay from './components/Intro/IntroOverlay'
-
-// Merged all phases from both branches
+// Merged boot phases from both branches
 type BootPhase = 'typography' | 'preloader' | 'unveiling' | 'ready'
 
 // Hash routing: #/ → home landing, #/shop → shop product listing.
@@ -28,7 +27,6 @@ function currentRoute() {
 }
 
 function App() {
-  // Start with the typography phase from the feature branch
   const [bootPhase, setBootPhase] = useState<BootPhase>('typography')
   const [route, setRoute] = useState(currentRoute())
 
@@ -40,19 +38,19 @@ function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  // Reset scroll on page change
+  // Reset scroll position on page change
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [route])
 
   return (
     <CartProvider>
-      {/* Phase 1: Typography Intro (from feature branch) */}
+      {/* Phase 1: Typography Intro */}
       {bootPhase === 'typography' && (
         <IntroOverlay onComplete={() => setBootPhase('preloader')} />
       )}
 
-      {/* Phase 2 & 3: Main Intro & Unveiling (from main branch) */}
+      {/* Phase 2 & 3: Main Intro & Unveiling */}
       {(bootPhase === 'preloader' || bootPhase === 'unveiling') && (
         <Intro
           onReveal={() => setBootPhase('unveiling')}
@@ -61,9 +59,9 @@ function App() {
       )}
 
       {/* 
-        Always mount the CategoryProvider and the layout. 
-        This keeps main's smooth "unveiling" transition where the 
-        hero animates in underneath the fading intro.
+        Always mount the CategoryProvider and layout configuration.
+        This preserves the smooth, cinematic "unveiling" move where the 
+        hero asset animates behind the leaving intro screen seamlessly.
       */}
       <CategoryProvider>
         <Nav />
@@ -72,11 +70,12 @@ function App() {
           <Shop />
         ) : (
           <>
-            {/* The Hero is ready as soon as we hit unveiling or ready */}
+            {/* The Hero wakes up as soon as we transition into unveiling or ready */}
             <Hero ready={bootPhase === 'unveiling' || bootPhase === 'ready'} />
             <Story />
             <Craft />
             <DomeGallery />
+            <TrendingCollections />
             <ExploreByOccasion />
             <ProductShowcase />
             <ClosingCTA />

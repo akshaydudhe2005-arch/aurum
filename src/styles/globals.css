@@ -74,11 +74,11 @@
    4. TYPE SCALE
    ============================================================ */
   --text-hero: clamp(64px, 10vw, 140px);
-  --text-display: clamp(40px, 6vw, 96px);
-  --text-heading: clamp(24px, 3vw, 40px);
-  --text-body: 16px;
-  --text-small: 13px;
-  --text-micro: 11px;
+  --text-display: clamp(44px, 6.5vw, 104px);
+  --text-heading: clamp(30px, 3.6vw, 48px);
+  --text-body: 18px;
+  --text-small: 15px;
+  --text-micro: 12px;
 
   /* ============================================================
    5. LETTER SPACING
@@ -168,24 +168,24 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main {
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img,
