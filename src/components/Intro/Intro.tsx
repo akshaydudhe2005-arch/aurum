@@ -34,12 +34,16 @@ export default function Intro({
   const rafRef = useRef<number | null>(null)
   const skippedRef = useRef(false)
   const phaseRef = useRef<Phase>('loading')
+  const revealNotifiedRef = useRef(false)
 
   useEffect(() => {
     phaseRef.current = phase
     // tell the app the reveal has begun so the hero can start
-    // its entrance underneath the intro
-    if (phase === 'revealing') onReveal?.()
+    // its entrance underneath the intro (fire exactly once)
+    if (phase === 'revealing' && !revealNotifiedRef.current) {
+      revealNotifiedRef.current = true
+      onReveal?.()
+    }
   }, [phase, onReveal])
 
   useEffect(() => {
